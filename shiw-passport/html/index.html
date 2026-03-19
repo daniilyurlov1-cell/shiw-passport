@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Паспорт</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PT Serif', serif;
+            overflow: hidden;
+        }
+
+        #passport-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Горизонтальная затасканная бумага */
+        .passport-paper {
+            width: 650px;
+            height: 380px;
+            background: #E6DCCA;
+            padding: 30px 40px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 
+                0 5px 25px rgba(0,0,0,0.5),
+                inset 0 0 60px rgba(120, 90, 50, 0.15);
+            transform: rotate(-0.5deg);
+        }
+
+        /* Сильные потёртости и пятна */
+        .passport-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                /* Большие пятна */
+                radial-gradient(ellipse at 10% 15%, rgba(130, 90, 40, 0.2) 0%, transparent 40%),
+                radial-gradient(ellipse at 90% 85%, rgba(110, 75, 35, 0.18) 0%, transparent 45%),
+                radial-gradient(ellipse at 75% 10%, rgba(140, 100, 50, 0.15) 0%, transparent 35%),
+                radial-gradient(ellipse at 5% 90%, rgba(120, 85, 40, 0.17) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(100, 70, 30, 0.08) 0%, transparent 60%),
+                /* Мелкие пятна */
+                radial-gradient(circle at 30% 70%, rgba(90, 60, 25, 0.12) 0%, transparent 20%),
+                radial-gradient(circle at 70% 30%, rgba(100, 70, 30, 0.1) 0%, transparent 15%),
+                radial-gradient(circle at 20% 40%, rgba(110, 80, 35, 0.09) 0%, transparent 18%),
+                radial-gradient(circle at 85% 60%, rgba(95, 65, 28, 0.11) 0%, transparent 22%);
+            pointer-events: none;
+        }
+
+        /* Потёртости по краям */
+        .passport-paper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(to right, rgba(80, 50, 20, 0.12) 0%, transparent 3%),
+                linear-gradient(to left, rgba(80, 50, 20, 0.1) 0%, transparent 4%),
+                linear-gradient(to bottom, rgba(80, 50, 20, 0.08) 0%, transparent 5%),
+                linear-gradient(to top, rgba(80, 50, 20, 0.1) 0%, transparent 4%);
+            pointer-events: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95) rotate(-0.5deg); }
+            to { opacity: 1; transform: scale(1) rotate(-0.5deg); }
+        }
+
+        .paper-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Заголовок */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(100, 70, 40, 0.4);
+        }
+
+        .doc-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Место и дата выдачи */
+        .issue-info {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #3a2a1a;
+        }
+
+        .issue-info span {
+            font-family: 'Marck Script', cursive;
+            font-size: 17px;
+            color: #1a0a00;
+        }
+
+        /* Основной контент - две колонки */
+        .main-content {
+            display: flex;
+            gap: 40px;
+            flex: 1;
+        }
+
+        .info-column {
+            flex: 1;
+        }
+
+        .info-line {
+            display: flex;
+            margin-bottom: 6px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info-label {
+            color: #3a2a1a;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            font-family: 'Marck Script', cursive;
+            font-size: 18px;
+            color: #1a0a00;
+            margin-left: 8px;
+        }
+
+        /* Нижняя часть */
+        .bottom-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid rgba(100, 70, 40, 0.3);
+        }
+
+        /* Печать */
+        .stamp {
+            width: 65px;
+            height: 65px;
+            border: 2px solid rgba(70, 50, 30, 0.35);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(70, 50, 30, 0.45);
+            font-size: 7px;
+            text-transform: uppercase;
+            text-align: center;
+            transform: rotate(-8deg);
+            line-height: 1.3;
+        }
+
+        /* Подпись */
+        .signature-area {
+            text-align: right;
+        }
+
+        .signature-label {
+            font-size: 10px;
+            color: #5a4a3a;
+            margin-bottom: 3px;
+        }
+
+        .signature {
+            font-family: 'Marck Script', cursive;
+            font-size: 22px;
+            color: #1a0a00;
+        }
+
+        /* Кто показал */
+        .showed-by {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #e8dcc4;
+            font-size: 13px;
+            border-radius: 3px;
+            display: none;
+            white-space: nowrap;
+        }
+
+        .close-hint {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.35);
+            font-size: 11px;
+        }
+
+        .showed-by[style*="block"] ~ .close-hint {
+            bottom: -70px;
+        }
+
+        /* ===== ФОРМА СОЗДАНИЯ ===== */
+        #creation-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .creation-form {
+            width: 350px;
+            background: #E6DCCA;
+            padding: 28px;
+            box-shadow: 
+                0 4px 20px rgba(0,0,0,0.5),
+                inset 0 0 40px rgba(120, 90, 50, 0.1);
+        }
+
+        .creation-form h2 {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 18px;
+            color: #1a1a1a;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #3a2a1a;
+            margin-bottom: 4px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #B8A080;
+            background: #F5F0E5;
+            font-family: 'PT Serif', serif;
+            font-size: 13px;
+            color: #1a1a1a;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8B7355;
+        }
+
+        .form-group input[readonly] {
+            background: #E0D8C8;
+            color: #5a4a3a;
+        }
+
+        .price-display {
+            text-align: center;
+            padding: 10px;
+            background: rgba(120, 90, 50, 0.1);
+            margin: 14px 0;
+            font-size: 14px;
+            color: #3a2a1a;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #8B7355;
+            background: transparent;
+            font-family: 'PT Serif', serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: #3a2a1a;
+        }
+
+        .form-btn:hover {
+            background: rgba(120, 90, 50, 0.15);
+        }
+
+        .form-btn-cancel {
+            border-color: #8B6355;
+            color: #5a3a2a;
+        }
+    </style>
+</head>
+<body>
+    <div id="passport-container">
+        <div class="passport-paper">
+            <div class="paper-content">
+                <div class="doc-header">
+                    <div class="doc-title">Паспорт</div>
+                </div>
+
+                <div class="issue-info">
+                    № <span id="serial" style="font-family: 'Courier New', monospace; letter-spacing: 2px; font-size: 14px;">—</span>
+                </div>
+
+                <div class="issue-info">
+                    Выдан:&nbsp; <span id="city">—</span>,&nbsp; <span id="issueDate">—</span>
+                </div>
+
+                <div class="main-content">
+                    <div class="info-column">
+                        <div class="info-line">
+                            <span class="info-label">Имя:</span>
+                            <span class="info-value" id="fullname">—</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">Пол:</span>
+                            <span class="info-value" id="gender">—</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">Дата рождения:</span>
+                            <span class="info-value" id="birthdate">—</span>
+                        </div>
+                    </div>
+                    <div class="info-column">
+                        <div class="info-line">
+                            <span class="info-label">Цвет глаз:</span>
+                            <span class="info-value" id="eyecolor">—</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">Вероисповедание:</span>
+                            <span class="info-value" id="religion">—</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">Адрес:</span>
+                            <span class="info-value" id="registration">не указан</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bottom-section">
+                    <div class="stamp">
+                        Канцелярия<br>шерифа
+                    </div>
+                    <div class="signature-area">
+                        <div class="signature-label">Подпись:</div>
+                        <div class="signature" id="signature">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="showed-by" id="showedBy"></div>
+            <div class="close-hint">[ ESC ] — закрыть</div>
+        </div>
+    </div>
+
+    <div id="creation-container">
+        <div class="creation-form">
+            <h2>Оформление</h2>
+            
+            <div class="form-group">
+                <label>Имя</label>
+                <input type="text" id="input-firstname" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Фамилия</label>
+                <input type="text" id="input-lastname" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Вероисповедание</label>
+                <select id="input-religion"></select>
+            </div>
+            
+            <div class="form-group">
+                <label>Цвет глаз</label>
+                <select id="input-eyecolor"></select>
+            </div>
+            
+            <div class="form-group">
+                <label>Место выдачи</label>
+                <input type="text" id="input-city" readonly>
+            </div>
+            
+            <div class="price-display">
+                Стоимость: $<span id="passport-price">0</span>
+            </div>
+            
+            <div class="form-buttons">
+                <button class="form-btn" onclick="confirmPassportCreation()">Оформить</button>
+                <button class="form-btn form-btn-cancel" onclick="cancelPassportCreation()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var container = document.getElementById('passport-container');
+        var creationContainer = document.getElementById('creation-container');
+        var passportPaper = document.querySelector('.passport-paper');
+        var creationForm = document.querySelector('.creation-form');
+        var resourceName = 'rsg-passport';
+        var creationData = {};
+
+        function resetVisualState(forceReflow) {
+            var showedByEl = document.getElementById('showedBy');
+            showedByEl.innerText = '';
+            showedByEl.style.display = 'none';
+
+            container.style.display = 'none';
+            creationContainer.style.display = 'none';
+
+            // Force reflow on animated nodes to prevent visual artifacts.
+            if (forceReflow) {
+                if (passportPaper) void passportPaper.offsetHeight;
+                if (creationForm) void creationForm.offsetHeight;
+            }
+        }
+
+        window.addEventListener('message', function(event) {
+            var data = event.data;
+            
+            if (data.action === 'openPassport') {
+                openPassport(data.data, data.own, data.showName);
+            } else if (data.action === 'hide') {
+                resetVisualState(true);
+            } else if (data.action === 'setResourceName') {
+                resourceName = data.name;
+            } else if (data.action === 'openPassportCreation') {
+                openPassportCreationForm(data);
+            }
+        });
+
+        function openPassport(data, isOwn, showName) {
+            resetVisualState(true);
+
+            var fullname = (data.firstname || '—') + ' ' + (data.lastname || '');
+            document.getElementById('fullname').innerText = fullname.trim();
+            
+            var gender = '—';
+            if (data.gender === 0 || data.gender === '0') gender = 'мужской';
+            else if (data.gender === 1 || data.gender === '1') gender = 'женский';
+            document.getElementById('gender').innerText = gender;
+            
+            document.getElementById('eyecolor').innerText = (data.eyecolor || '—').toLowerCase();
+            document.getElementById('religion').innerText = (data.religion || '—').toLowerCase();
+            document.getElementById('city').innerText = data.city || '—';
+            document.getElementById('serial').innerText = data.serial || '—';
+            document.getElementById('registration').innerText = data.registration || 'не указан';
+            document.getElementById('birthdate').innerText = data.birthdate || '—';
+            document.getElementById('issueDate').innerText = data.issueDate || '1899 год';
+            document.getElementById('signature').innerText = data.lastname || '—';
+
+            var showedByEl = document.getElementById('showedBy');
+            if (!isOwn && showName) {
+                showedByEl.innerText = 'Документ предъявил: ' + showName;
+                showedByEl.style.display = 'block';
+            } else {
+                showedByEl.style.display = 'none';
+            }
+            
+            container.style.display = 'flex';
+        }
+
+        function openPassportCreationForm(data) {
+            resetVisualState(true);
+            creationData = data;
+            
+            document.getElementById('input-firstname').value = data.playerData.firstname;
+            document.getElementById('input-lastname').value = data.playerData.lastname;
+            document.getElementById('input-city').value = data.city;
+            
+            if (data.price !== undefined) {
+                document.getElementById('passport-price').innerText = data.price;
+            }
+            
+            var religionSelect = document.getElementById('input-religion');
+            religionSelect.innerHTML = '';
+            data.religions.forEach(function(r) {
+                var opt = document.createElement('option');
+                opt.value = r;
+                opt.innerText = r;
+                religionSelect.appendChild(opt);
+            });
+            
+            var eyecolorSelect = document.getElementById('input-eyecolor');
+            eyecolorSelect.innerHTML = '';
+            data.eyecolors.forEach(function(c) {
+                var opt = document.createElement('option');
+                opt.value = c;
+                opt.innerText = c;
+                eyecolorSelect.appendChild(opt);
+            });
+            
+            creationContainer.style.display = 'flex';
+        }
+
+        function confirmPassportCreation() {
+            resetVisualState(false);
+            
+            fetch('https://' + resourceName + '/createPassportWithParams', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    firstname: creationData.playerData.firstname,
+                    lastname: creationData.playerData.lastname,
+                    gender: creationData.playerData.gender,
+                    religion: document.getElementById('input-religion').value,
+                    eyecolor: document.getElementById('input-eyecolor').value,
+                    city: creationData.city
+                })
+            });
+        }
+
+        function cancelPassportCreation() {
+            resetVisualState(false);
+            fetch('https://' + resourceName + '/cancelPassportCreation', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({})
+            });
+        }
+
+        function closePassport() {
+            resetVisualState(false);
+            fetch('https://' + resourceName + '/closePassport', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({})
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (container.style.display === 'flex') closePassport();
+                else if (creationContainer.style.display === 'flex') cancelPassportCreation();
+            }
+        });
+    </script>
+</body>
+</html>

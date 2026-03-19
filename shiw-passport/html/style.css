@@ -1,0 +1,296 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', serif;
+    overflow: hidden;
+}
+
+#passport-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.passport-wrapper {
+    perspective: 2000px;
+}
+
+.passport-book {
+    display: flex;
+    width: 900px;
+    height: 600px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: openBook 0.5s ease-out;
+}
+
+@keyframes openBook {
+    from {
+        transform: rotateY(-20deg);
+        opacity: 0;
+    }
+    to {
+        transform: rotateY(0deg);
+        opacity: 1;
+    }
+}
+
+.passport-page {
+    width: 50%;
+    background: linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 100%);
+    padding: 40px;
+    position: relative;
+    border: 3px solid #8b6f47;
+}
+
+.left-page {
+    border-right: 1px solid #8b6f47;
+    background-image: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 111, 71, 0.03) 2px,
+            rgba(139, 111, 71, 0.03) 4px
+        );
+}
+
+.right-page {
+    background-image: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(139, 111, 71, 0.03) 2px,
+            rgba(139, 111, 71, 0.03) 4px
+        );
+}
+
+.page-number {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    font-size: 14px;
+    color: #8b6f47;
+    opacity: 0.5;
+}
+
+/* Левая страница */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #8b6f47;
+    padding-bottom: 15px;
+}
+
+.header h1 {
+    font-size: 28px;
+    color: #2c1810;
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+}
+
+.header h2 {
+    font-size: 20px;
+    color: #5a4632;
+    letter-spacing: 2px;
+}
+
+.eagle-emblem {
+    font-size: 48px;
+    color: #8b6f47;
+    margin-top: 10px;
+}
+
+.passport-title {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.passport-title h3 {
+    font-size: 32px;
+    color: #2c1810;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #5a4632;
+    font-style: italic;
+}
+
+.photo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.photo-frame {
+    border: 3px solid #8b6f47;
+    padding: 5px;
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.photo-placeholder {
+    width: 200px;
+    height: 250px;
+    background: linear-gradient(135deg, #d4c5b0 0%, #c4b5a0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 64px;
+}
+
+.stamp {
+    margin-top: 20px;
+    text-align: center;
+    border: 2px solid rgba(139, 71, 71, 0.4);
+    padding: 10px 20px;
+    transform: rotate(-5deg);
+    background: rgba(139, 71, 71, 0.1);
+    color: #8b4747;
+    font-weight: bold;
+}
+
+.stamp p {
+    margin: 2px 0;
+}
+
+/* Правая страница */
+.info-section {
+    margin-bottom: 30px;
+}
+
+.serial-number {
+    text-align: center;
+    padding: 15px;
+    background: rgba(139, 111, 71, 0.1);
+    border: 2px dashed #8b6f47;
+    margin-bottom: 25px;
+}
+
+.serial-number .label {
+    display: block;
+    font-size: 12px;
+    color: #5a4632;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.serial-number .value {
+    font-size: 20px;
+    color: #2c1810;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+}
+
+.info-group {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(139, 111, 71, 0.3);
+}
+
+.city-group {
+    border-bottom: 2px solid #8b6f47;
+    padding-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+
+.info-row .label {
+    font-size: 14px;
+    color: #5a4632;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-row .value {
+    font-size: 16px;
+    color: #2c1810;
+    font-weight: normal;
+}
+
+.value.city {
+    font-size: 18px;
+    font-weight: bold;
+    color: #8b4747;
+}
+
+.signature-section {
+    margin: 30px 0 20px 0;
+}
+
+.signature-line {
+    height: 2px;
+    background: #8b6f47;
+    margin-bottom: 5px;
+}
+
+.signature-label {
+    font-size: 11px;
+    color: #5a4632;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Кнопки */
+.buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #8b6f47;
+    background: linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 100%);
+    color: #2c1810;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Times New Roman', serif;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, #e8d5b7 0%, #d4c5a0 100%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-show {
+    border-color: #4a7c4e;
+    color: #2d4a2f;
+}
+
+.btn-close {
+    border-color: #8b4747;
+    color: #5a2c2c;
+}
